@@ -8,6 +8,7 @@
 import SwiftUI
 import GoogleSignIn
 import GoogleSignInSwift
+import FirebaseAuth
 
 struct ContentView: View {
     var body: some View {
@@ -20,11 +21,27 @@ struct ContentView: View {
                                         as? UIWindowScene)?.windows.first?.rootViewController else { return }
         GIDSignIn.sharedInstance.signIn(
             withPresenting: rootViewController) { signInResult, error in
+                guard error == nil else {
+                    // Handle error
+                    return
+                }
                 guard let result = signInResult else {
                     // Inspect error
                     return
                 }
-                // If sign in succeeded, display the app's main content View.
+                // TODO: If sign in succeeded, display the app's main content View.
+                guard let idToken = result.user.idToken?.tokenString else {
+                    // ...
+                    return
+                }
+                let accessToken = result.user.accessToken.tokenString
+                let credential = GoogleAuthProvider.credential(
+                    withIDToken: idToken,
+                    accessToken: accessToken
+                )
+                Auth.auth().signIn(with: credential) { result, error in
+                    // At this point, our user is signed in
+                }
             }
     }
 }
