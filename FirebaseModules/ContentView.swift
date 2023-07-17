@@ -9,11 +9,15 @@ import SwiftUI
 import GoogleSignIn
 import GoogleSignInSwift
 import FirebaseAuth
+import FacebookLogin
 
 struct ContentView: View {
     var body: some View {
-        GoogleSignInButton(action: handleSignInButton)
-            .padding()
+        VStack {
+            GoogleSignInButton(action: handleSignInButton)
+                .padding()
+        }
+        
     }
     
     func handleSignInButton() {
